@@ -19,6 +19,8 @@ function doQuery (client, query, values, cb) {
     if (err) {
       return console.log('Err:', err);
     }
+    console.log('Searching ...');
+    console.log(`Found ${res.rows.length} person(s) by the name ${name}:`);
     res.rows.forEach(cb);
     client.end();
   });
