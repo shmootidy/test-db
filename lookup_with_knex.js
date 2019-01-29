@@ -34,6 +34,8 @@ function findPerson (knex, name) {
     .where(knex.raw('first_name LIKE ?', [`${name}%`]))
     .asCallback((err, rows) => {
       if (err) return console.error(err);
+      console.log('Searching ...');
+      console.log(`Found ${rows.length} person(s) by the name ${name}:`);
       rows.forEach((person, i) => {
         const birthDate = birthdateConverter(person.birthdate);
         console.log(`- ${i+1}: ${person.first_name} ${person.last_name}, born '${birthDate}'`);
