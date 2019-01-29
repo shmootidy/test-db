@@ -28,9 +28,10 @@ function birthdateConverter (givenDate) {
   return `${year}-${month}-${date}`;
 }
 
-(function findPerson (knex, name) {
-  knex.select('*').from('famous_people')
-    .where('first_name', 'like', 'Paul%')
+function findPerson (knex, name) {
+  knex('famous_people')
+    .select(knex.raw('*'))
+    .where(knex.raw('first_name LIKE ?', [`${name}%`]))
     .asCallback((err, rows) => {
       if (err) return console.error(err);
       rows.forEach((person, i) => {
@@ -39,8 +40,13 @@ function birthdateConverter (givenDate) {
       });
       knex.destroy();
     });
-})(knex);
+};
 
+if (name) {
+  findPerson(knex, name);
+} else {
+  console.log('Nope!');
+}
 
 // knex.from('famous_people').select('*')
 //   .then((people) => {
