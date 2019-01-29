@@ -12,13 +12,21 @@ const knex = require('knex')({
   }
 });
 
-knex.from('famous_people').select('*')
-  .then((people) => {
-    console.log(people);
-  })
-  .catch((err) => {
-    console.log(err); throw err
-  })
-  .finally(() => {
+// knex.from('famous_people').select('*')
+//   .then((people) => {
+//     console.log(people);
+//   })
+//   .catch((err) => {
+//     console.log(err); throw err
+//   })
+//   .finally(() => {
+//     knex.destroy();
+//   });
+
+knex.select('*').from('famous_people')
+  .where('first_name', 'like', 'Paul%')
+  .asCallback((err, res) => {
+    if (err) return console.error(err);
+    console.log(res);
     knex.destroy();
-  });
+  })
