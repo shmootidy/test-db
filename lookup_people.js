@@ -29,10 +29,9 @@ function doQuery (client, query, values, cb) {
 function birthdateConverter (givenDate) {
   const birthDate = new Date(givenDate);
   const year = birthDate.getFullYear();
-  let month = if (birthDate.getMonth() + 1 < 10) {
-    '0' + birthDate.getMonth() + 1;
-  } else {
-    birthDate.getMonth() +1;
+  let month = birthDate.getMonth() + 1;
+  if (month < 10) {
+    month = '0' + month;
   }
   let date = birthDate.getDate();
   if (date < 10) {
