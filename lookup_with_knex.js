@@ -11,6 +11,8 @@ const knex = require('knex')({
     ssl       : settings.ssl
   }
 });
+const name = process.argv.slice(2);
+
 
 function birthdateConverter (givenDate) {
   const birthDate = new Date(givenDate);
@@ -26,17 +28,19 @@ function birthdateConverter (givenDate) {
   return `${year}-${month}-${date}`;
 }
 
-knex.select('*').from('famous_people')
-  .where('first_name', 'like', 'Paul%')
-  .asCallback((err, rows) => {
-    if (err) return console.error(err);
-    rows.forEach((person, i) => {
-    const birthDate = birthdateConverter(person.birthdate);
-    console.log(`- ${i+1}: ${person.first_name} ${person.last_name}, born '${birthDate}'`);
-  });
-    // console.log(rows);
-    knex.destroy();
-  })
+(function findPerson (knex, name) {
+  knex.select('*').from('famous_people')
+    .where('first_name', 'like', 'Paul%')
+    .asCallback((err, rows) => {
+      if (err) return console.error(err);
+      rows.forEach((person, i) => {
+        const birthDate = birthdateConverter(person.birthdate);
+        console.log(`- ${i+1}: ${person.first_name} ${person.last_name}, born '${birthDate}'`);
+      });
+      knex.destroy();
+    });
+})(knex);
+
 
 // knex.from('famous_people').select('*')
 //   .then((people) => {
