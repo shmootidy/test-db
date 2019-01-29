@@ -24,21 +24,26 @@ function doQuery (client, query, values, cb) {
   });
 }
 
+function birthdateConverter (givenDate) {
+  const birthDate = new Date(givenDate);
+  const year = birthDate.getFullYear();
+  let month = birthDate.getMonth() + 1;
+  if (month < 10) {
+    month = '0' + month;
+  }
+  let date = birthDate.getDate();
+  if (date < 10) {
+    date = '0' + date;
+  }
+  return `${year}-${month}-${date}`;
+}
+
 function findPerson (client, name) {
   const query = "SELECT * FROM famous_people WHERE first_name LIKE $1";
   const values = [`${name}%`];
   doQuery(client, query, values, (person, i) => {
-    const birthDate = new Date(person.birthdate);
-    const year = birthDate.getFullYear();
-    let month = birthDate.getMonth() + 1;
-    if (month < 10) {
-      month = '0' + month;
-    }
-    let date = birthDate.getDate();
-    if (date < 10) {
-      date = '0' + date;
-    }
-    console.log(`- ${i+1}: ${person.first_name} ${person.last_name}, born '${year}-${month}-${date}'`);
+    const birthDate = birthdateConverter(person.birthdate);
+    console.log(`- ${i+1}: ${person.first_name} ${person.last_name}, born '${birthDate}'`);
   });
 }
 
