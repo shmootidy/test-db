@@ -25,8 +25,8 @@ const knex = require('knex')({
 
 knex.select('*').from('famous_people')
   .where('first_name', 'like', 'Paul%')
-  .asCallback((err, res) => {
+  .asCallback((err, rows) => {
     if (err) return console.error(err);
-    console.log(res);
+    console.log(rows);
     knex.destroy();
   })
