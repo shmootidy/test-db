@@ -27,6 +27,10 @@ knex.select('*').from('famous_people')
   .where('first_name', 'like', 'Paul%')
   .asCallback((err, rows) => {
     if (err) return console.error(err);
-    console.log(rows);
+    rows.forEach((person, i) => {
+    // const birthDate = birthdateConverter(person.birthdate);
+    console.log(`- ${i+1}: ${person.first_name} ${person.last_name}, born '${person.birthdate}'`);
+  });
+    // console.log(rows);
     knex.destroy();
   })
