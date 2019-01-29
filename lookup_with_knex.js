@@ -12,17 +12,6 @@ const knex = require('knex')({
   }
 });
 
-// knex.from('famous_people').select('*')
-//   .then((people) => {
-//     console.log(people);
-//   })
-//   .catch((err) => {
-//     console.log(err); throw err
-//   })
-//   .finally(() => {
-//     knex.destroy();
-//   });
-
 function birthdateConverter (givenDate) {
   const birthDate = new Date(givenDate);
   const year = birthDate.getFullYear();
@@ -48,3 +37,14 @@ knex.select('*').from('famous_people')
     // console.log(rows);
     knex.destroy();
   })
+
+// knex.from('famous_people').select('*')
+//   .then((people) => {
+//     console.log(people);
+//   })
+//   .catch((err) => {
+//     console.log(err); throw err
+//   })
+//   .finally(() => {
+//     knex.destroy();
+//   });
