@@ -30,8 +30,9 @@ function birthdateConverter (givenDate) {
 
 function findPerson (knex, name) {
   knex('famous_people')
-    .select(knex.raw('*'))
-    .where(knex.raw('first_name LIKE ?', [`${name}%`]))
+    // .select(knex.raw('*'))
+    // .where(knex.raw('first_name LIKE ?', [`${name}%`]))
+    .where('first_name', 'like', `${name}%`)
     .asCallback((err, rows) => {
       if (err) return console.error(err);
       console.log('Searching ...');
