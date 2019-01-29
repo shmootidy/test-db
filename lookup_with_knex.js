@@ -23,13 +23,27 @@ const knex = require('knex')({
 //     knex.destroy();
 //   });
 
+function birthdateConverter (givenDate) {
+  const birthDate = new Date(givenDate);
+  const year = birthDate.getFullYear();
+  let month = birthDate.getMonth() + 1;
+  if (month < 10) {
+    month = '0' + month;
+  }
+  let date = birthDate.getDate();
+  if (date < 10) {
+    date = '0' + date;
+  }
+  return `${year}-${month}-${date}`;
+}
+
 knex.select('*').from('famous_people')
   .where('first_name', 'like', 'Paul%')
   .asCallback((err, rows) => {
     if (err) return console.error(err);
     rows.forEach((person, i) => {
-    // const birthDate = birthdateConverter(person.birthdate);
-    console.log(`- ${i+1}: ${person.first_name} ${person.last_name}, born '${person.birthdate}'`);
+    const birthDate = birthdateConverter(person.birthdate);
+    console.log(`- ${i+1}: ${person.first_name} ${person.last_name}, born '${birthDate}'`);
   });
     // console.log(rows);
     knex.destroy();
