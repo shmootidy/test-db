@@ -14,15 +14,21 @@ const client = new pg.Client({
 
 client.connect();
 
-client.query("SELECT * FROM famous_people WHERE first_name LIKE $1", [`${name}%`], (err, res) => {
-  if (err) {
-    return console.log('Err:', err);
-  }
-  console.log('Searching ...');
-  console.log(`Found ${res.rows.length} person(s) by the name '${name}'`);
-  res.rows.forEach((person, i) => {
-    // console.log(res.rows[i].birthdate);
-    const birthDate = new Date(res.rows[i].birthdate);
+function doQuery (client, query, values, cb) {
+  client.query(query, values, (err, res) => {
+    if (err) {
+      return console.log('Err:', err);
+    }
+    res.rows.forEach(cb);
+    client.end();
+  });
+}
+
+function findPerson (client, name) {
+  const query = "SELECT * FROM famous_people WHERE first_name LIKE $1";
+  const values = [`${name}%`];
+  doQuery(client, query, values, (person, i) => {
+    const birthDate = new Date(person.birthdate);
     const year = birthDate.getFullYear();
     let month = birthDate.getMonth() + 1;
     if (month < 10) {
@@ -32,13 +38,12 @@ client.query("SELECT * FROM famous_people WHERE first_name LIKE $1", [`${name}%`
     if (date < 10) {
       date = '0' + date;
     }
-    console.log(`- ${i+1}: ${res.rows[i].first_name} ${res.rows[i].last_name}, born '${year}-${month}-${date}'`);
-  })
-  client.end();
-});
+    console.log(`- ${i+1}: ${person.first_name} ${person.last_name}, born '${year}-${month}-${date}'`);
+  });
+}
 
-// client.query("SELECT * FROM famous_people", (err, res) => {
-//   if (err) return false;
-//   console.log(res);
-//   client.end();
-// });
+if (name) {
+  findPerson(client, name);
+} else {
+  console.log('Enter a name...');
+}
